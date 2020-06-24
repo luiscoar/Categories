@@ -4,14 +4,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var CategoryModelSchema = new Schema({
-    category: {
-        name: { type: String }, //nombre de la categoria
-        active: { type: Boolean, default: true }, // 0 : borrado logico, 1 : activado logico
-        status: { type: String, default: "" }, // estatus de negocio futuro, por el momento escribe un string vacio
-        discount: { type: Number }, // % de descuento
-        category_id: { type: Object, default: mongoose.Types.ObjectId() }, // Id autogenerado de la seccion
-        products: []
-    },
+    name: { type: String }, //nombre de la categoria
+    status: { type: String, default: "" }, // estatus de negocio futuro, por el momento escribe un string vacio
+    discount: { type: Number }, // % de descuento
+    products: [],
     settings: [{ key: String, default: "" }], // vacio por default
     active: { type: Boolean, default: true }, //0 : borrado logico, 1 : activado logico
     created_at: { type: Date, default: Date.now }, // al registrar escribe el getdate()

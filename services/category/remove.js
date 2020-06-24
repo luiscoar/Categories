@@ -5,45 +5,19 @@ var util = require("../../util/property-getter");
 
 
 function remove(id, res) {
-    let category_active = {
-        active: false
-    };
 
-    categoryModel.findByIdAndUpdate(id, category_active, { new: true, runValidators: true }, (err, categoryDB) => {
-            if (err) {
-                return res.status(500).json({
-                    ok: false,
-                    err
-                });
-            }
+    categoryModel.findById(id, (err, categoryDB) => {
+        if (err) { return res.status(400).json({ ok: false, error: err }); }
+        if (!categoryDB) { return res.status(400).json({ ok: false, error: { message: 'El Id no existe' } }); }
 
-            if (!categoryDB) {
-                return res.status(400).json({
-                    ok: false,
-                    err: {
-                        message: 'id no existe'
-                    }
-                });
-            }
+        categoryDB.active = false;
 
-            categoryDB.active = false;
-            categoryDB.category.active = false
+        categoryDB.save((err, categorySave) => {
+            if (err) { return res.status(400).json({ ok: false, error: err }); }
+            return res.status(200).json({ ok: true, category: categorySave });
+        });
+    });
 
-            categoryDB.save((err, categoryDel) => {
-                if (err) {
-                    return res.status(500).json({
-                        ok: false,
-                        err
-                    });
-                }
-                res.json({
-                    ok: true,
-                    categorys: categoryDel,
-                    mensaje: 'Category delete'
-                });
-            })
-
-        })
-        // return options;
 }
+
 module.exports = { remove }

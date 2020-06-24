@@ -11,10 +11,11 @@ var ProductModelSchema = new Schema({
         discount: { type: Number }, //  % de descuento
         has_discount: { type: Boolean, default: false }, // true :  tiene descuento, false : no tiene descuento
         send_detail: { type: String }, // detalles para su envio, escribe un lorem ipsum
-        active: { type: Boolean }, // 0 : borrado logico, 1 : activado logico
+        active: { type: Boolean, default: true }, // 0 : borrado logico, 1 : activado logico
         status: { type: String, default: "" }, //estatus de negocio futuro, por el momento escribe un string vacio
         prod_id: { type: Object, default: mongoose.Types.ObjectId() }, // Id autogenerado de la seccion
-        category_id: { type: Schema.Types.ObjectId, ref: 'CategoryModel', required: true }
+        // category_id: { type: Schema.Types.ObjectId, ref: 'CategoryModel', required: true }
+        category_id: { type: Object, required: true }
     }]
 });
 
