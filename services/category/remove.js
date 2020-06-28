@@ -2,22 +2,17 @@ var categoryModel = require('../../models/category/category-model');
 var response = require("../../models/common/response");
 var config = require("../../config/config");
 var util = require("../../util/property-getter");
+const { SetResponse } = require('../../models/common/response');
 
-
-function remove(id, res) {
-
-    categoryModel.findById(id, (err, categoryDB) => {
-        if (err) { return res.status(400).json({ ok: false, error: err }); }
-        if (!categoryDB) { return res.status(400).json({ ok: false, error: { message: 'El Id no existe' } }); }
-
-        categoryDB.active = false;
-
-        categoryDB.save((err, categorySave) => {
-            if (err) { return res.status(400).json({ ok: false, error: err }); }
-            return res.status(200).json({ ok: true, category: categorySave });
-        });
-    });
-
+async function remove(id) {
+    try {
+        let categoryDel = await categoryModel.findById(id);
+        categoryDel.active = false;
+        const category = await categoryDel.save();
+        return SetResponse(category, config.http_codes.SUCCESS, "");
+    } catch (err) {
+        return SetResponse(null, config.http_codes.SERVER_ERROR, "", err);
+    }
 }
 
 module.exports = { remove }

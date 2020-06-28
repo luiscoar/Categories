@@ -2,29 +2,35 @@
 var express = require('express');
 var router = express.Router();
 
-/*settings*/
-var config = require("../../config/config");
-var response = require("../../models/common/response");
-
 /*services*/
-// const update_service = require('../../services/product/update');
+const update_service = require('../../services/product/update');
 const add_service = require('../../services/product/add');
-// const remove_service = require('../../services/product/remove');
-// const list_service = require('../../services/product/list');
-// const productModel = require('../../models/product/product-model');
-const { json } = require('body-parser');
+const remove_service = require('../../services/product/remove');
 
-router.put('/update/', async function(req, res) {
-    res.send(null);
+router.put('/upd/', async function(req, res) {
+    try {
+        const body = req.body;
+        const response = await update_service.upd(body);
+        res.send(response);
+    } catch (err) {
+        res.send(err);
+    }
 });
 
 router.post('/add', async function(req, res) {
-    let body = req.body;
-    await add_service.add(body, res);
+    const body = req.body;
+    const response = await add_service.add(body, res);
+    res.send(response)
 });
 
-router.delete('/remove/:id', async function(req, res) {
-    res.send(null);
+router.put('/remove', async function(req, res) {
+    try {
+        const body = req.body;
+        const response = await remove_service.remove(body);
+        res.send(response);
+    } catch (err) {
+        res.send(err);
+    }
 });
 
 router.get('/list', async function(req, res) {

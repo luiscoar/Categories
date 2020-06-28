@@ -1,17 +1,19 @@
-var response = require("../../models/common/response");
 var config = require("../../config/config");
-var util = require("../../util/property-getter");
 const categoryModel = require('../../models/category/category-model');
-const { json } = require('body-parser');
 const { SetResponse } = require("../../models/common/response");
 
-function add(category, res) {
-    let categoryNew = new categoryModel({ name: category.name, discount: category.discount });
-
-    categoryNew.save((err, categoryDB) => {
-        if (err) { return res.json({ ok: false, categoryDB }) }
-        return res.json({ ok: true, category: categoryDB });
-    })
+async function add(options) {
+    try {
+        if (Object.keys(options.headers.mn) != undefined && options.body.name != undefined && options.body.discount != undefined) {
+            let categoryNew = new categoryModel({ name: options.body.name, discount: options.body.discount, mn: options.headers.mn });
+            let category = await categoryNew.save();
+            return SetResponse(category, config.http_codes.SUCCESS, "Categoria agregada correctamente.", "");
+        } else {
+            throw "El mn, el nombre y/o el descuento no deben ir vacios";
+        }
+    } catch (err) {
+        return SetResponse(null, config.http_codes.stringify, "", err);
+    }
 }
 
 module.exports = { add }
